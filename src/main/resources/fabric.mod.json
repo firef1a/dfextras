@@ -1,0 +1,42 @@
+{
+	"schemaVersion": 1,
+	"id": "sitemod",
+	"version": "${version}",
+	"name": "sitemod",
+	"description": "site03 moment",
+	"authors": [
+		"firef1a"
+	],
+	"contact": {
+		"homepage": "https://github.com/firef1a/site03_mod",
+		"sources": "https://github.com/firef1a/site03_mod"
+	},
+	"license": "MIT",
+	"icon": "assets/sitemod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+          "dev.fire.sitemod.SiteMod"
+		],
+		"client": [
+			"dev.fire.sitemod.client.SiteModClient"
+		],
+		"modmenu": [
+			"dev.fire.sitemod.client.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"sitemod.mixins.json"
+	],
+
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*",
+		"yet_another_config_lib_v3": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
