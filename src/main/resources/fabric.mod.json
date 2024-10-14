@@ -1,32 +1,32 @@
 {
 	"schemaVersion": 1,
-	"id": "sitemod",
+	"id": "dfextras",
 	"version": "${version}",
-	"name": "sitemod",
-	"description": "site03 moment",
+	"name": "dfextras",
+	"description": "norway",
 	"authors": [
 		"firef1a"
 	],
 	"contact": {
-		"homepage": "https://github.com/firef1a/site03_mod",
-		"sources": "https://github.com/firef1a/site03_mod"
+		"homepage": "https://github.com/firef1a/dfextras",
+		"sources": "https://github.com/firef1a/dfextras"
 	},
 	"license": "MIT",
-	"icon": "assets/sitemod/icon.png",
+	"icon": "assets/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "dev.fire.sitemod.SiteMod"
+			"dev.fire.dfextras.Mod"
 		],
 		"client": [
-			"dev.fire.sitemod.client.SiteModClient"
+			"dev.fire.dfextras.client.ModClient"
 		],
 		"modmenu": [
-			"dev.fire.sitemod.client.ModMenuIntegration"
+			"dev.fire.dfextras.client.ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"sitemod.mixins.json"
+		"dfextras.mixins.json"
 	],
 
 	"depends": {
