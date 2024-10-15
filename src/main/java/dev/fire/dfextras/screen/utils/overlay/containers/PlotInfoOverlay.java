@@ -3,13 +3,16 @@ package dev.fire.dfextras.screen.utils.overlay.containers;
 import com.google.gson.JsonObject;
 import dev.fire.dfextras.Mod;
 import dev.fire.dfextras.config.configScreen.Config;
+import dev.fire.dfextras.devutils.ColorUtils;
 import dev.fire.dfextras.devutils.JsonUtils;
 import dev.fire.dfextras.screen.utils.overlay.Alignment;
 import dev.fire.dfextras.screen.utils.overlay.Container;
 import dev.fire.dfextras.screen.utils.overlay.TextList;
 import dev.fire.dfextras.screen.utils.scaler.Scaler;
+import dev.fire.dfextras.server.LocationType;
 import dev.fire.dfextras.server.ServerManager;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.util.ArrayList;
@@ -25,18 +28,45 @@ public class PlotInfoOverlay extends TextList {
 
     @Override
     public void update() {
-        ArrayList<Text> textList = new ArrayList<Text>(List.of(
-                Text.empty()
-                        .append(monoText("᛫", 0x5A7ACC))
-                        .append(monoText("᛬", 0x5A7ACC))
-                        .append(monoText("\uD800\uDF38", 0x7E9BE6))
-                        .append(monoText("᛬", 0x5A7ACC))
-                        .append(monoText("᛫", 0x5A7ACC))
-                        .append(Text.literal(" "))
-                        .append(monoText("Site-03", 0xB8C8F2)),
-                monoText("Players: ", 0xadadad)
+        LocationType locType = Mod.PLOT_MANAGER.plotInfo.locationType;
+        ArrayList<Text> textList = new ArrayList<Text>();
+        if (locType == LocationType.SPAWN) {
+            textList.add(monoText("At Spawn", 0xdbdbdb).styled(style -> style.withUnderline(false)));
+            textList.add(monoText("[", ColorUtils.DARK_GRAY).append(Text.literal(Mod.PLOT_MANAGER.plotInfo.node).withColor(ColorUtils.GRAY).append(monoText("]", ColorUtils.DARK_GRAY))));
+        }
+        if (locType == LocationType.PLOT) {
+            textList.add(Mod.PLOT_MANAGER.plotInfo.plotName);
+            textList.add(monoText("by ", ColorUtils.GRAY).append(Mod.PLOT_MANAGER.plotInfo.plotOwner));
+            //textList.add(Text.literal(Mod.PLOT_MANAGER.plotInfo.node));
+        }
+        if (locType != LocationType.NONE) {
+            ArrayList<Text> playerList = Mod.PLOT_MANAGER.playerList;
+            int numPlayers = playerList.size();
 
-        ));
+            int numColor = 0xc541d9;
+            if (inRange(numPlayers, 0, 2)) numColor = 0xe8703c;
+            if (inRange(numPlayers, 3, 4)) numColor = 0xe8bd3c;
+            if (inRange(numPlayers, 5, 7)) numColor = 0xf0e856;
+            if (inRange(numPlayers, 8, 16)) numColor = 0x71d941;
+            if (numPlayers > 16) numColor = 0x41bfd9;
+
+            textList.add(Text.literal(""));
+            textList.add(monoText("Players: ", ColorUtils.GRAY).append(monoText("" + numPlayers, numColor)));
+            int i = 0;
+            for (Text playerName : playerList) {
+                if (i > 10) {
+                    textList.add(Text.literal("...").withColor(0x9ec1db));
+                    break;
+                } else {
+                    textList.add(playerName);
+                }
+
+                i++;
+            }
+
+        }
+
+
         this.setTextList(textList);
     }
 

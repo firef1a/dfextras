@@ -5,6 +5,8 @@ import net.minecraft.text.Text;
 
 import java.util.Objects;
 
+import static dev.fire.dfextras.Mod.MOD_NAME;
+
 public class ChatManager {
     public static void sendMessageAsPlayer(String content) {
         if (content.charAt(0) == '/') {
@@ -25,7 +27,7 @@ public class ChatManager {
 
     public static void displayChatMessageToPlayer(Text content) {
         if (Mod.MC.player != null) {
-            Mod.MC.player.sendMessage(Text.literal("[SITEMOD]").withColor(0xed743b).append(Text.literal(" ").append(content)));
+            Mod.MC.player.sendMessage(Text.literal("[" + MOD_NAME.toUpperCase() +"]").withColor(0xed743b).append(Text.literal(" ").append(content)));
         }
     }
 

@@ -3,6 +3,8 @@ package dev.fire.dfextras.devutils;
 import java.awt.*;
 
 public class ColorUtils {
+    public static int GRAY = 0xaaaaaa;
+    public static int DARK_GRAY = 0x555555;
     public static int setAlpha(int color, float alpha) {return (color+ ((int)(alpha*255)<<24));}
 
     public static int grayScale(int p) {

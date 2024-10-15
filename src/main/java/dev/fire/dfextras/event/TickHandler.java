@@ -8,6 +8,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 public class TickHandler {
     public int tickInt = 0;
     public TickHandler() {
@@ -23,11 +25,12 @@ public class TickHandler {
         if (client == null) return;
         if (world == null) return;
 
+
         if (!ServerManager.isPlayingDiamondfire()) return;
 
         // do stuff?
         if (instance.getNetworkHandler() != null) ;
         //Mod.PLOT_MANAGER.requestPlotInfo();
-
+        Mod.PLOT_MANAGER.onTick();
     }
 }

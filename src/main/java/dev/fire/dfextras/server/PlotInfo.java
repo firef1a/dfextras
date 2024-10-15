@@ -6,22 +6,23 @@ public class PlotInfo {
     public Text plotName;
     public String plotOwner;
     public int plotID;
-    public String server;
+    public String node;
     public LocationType locationType;
 
-    public PlotInfo(String server, LocationType locationType) {
-        this.server = server;
+    public PlotInfo(String node, LocationType locationType) {
+        this.node = node;
         this.locationType = locationType;
     }
-    public PlotInfo(Text plotName, String plotOwner, int plotID, String server, LocationType locationType) {
+    public PlotInfo(Text plotName, String plotOwner, int plotID, String node, LocationType locationType) {
         this.plotName = plotName;
         this.plotOwner = plotOwner;
         this.plotID = plotID;
-        this.server = server;
+        this.node = node;
         this.locationType = locationType;
     }
 
     public PlotInfo(LocationType locationType) {
         this.locationType = locationType;
     }
+
 }

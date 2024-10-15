@@ -14,4 +14,12 @@ public class VectorUtils {
     public static Vec3d align(Vec3d vec) {
         return new Vec3d(Math.floor(vec.x), Math.floor(vec.y), Math.floor(vec.z));
     }
+
+    public static boolean isEqual(Vec3d a, Vec3d b) {
+        return a != null && b != null && a.getX() == b.getX() && a.getY() == b.getY() && a.getZ() == b.getZ();
+    }
+
+    public static boolean withinHorizontalRangeInclusive(Vec3d a, Vec3d b, double range) {
+        return a != null && b != null && range >= Math.sqrt(Math.pow(a.x-b.x, 2) + Math.pow(a.z-b.z, 2));
+    }
 }
