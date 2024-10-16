@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import dev.fire.dfextras.FileManager;
 import dev.fire.dfextras.Mod;
 import dev.fire.dfextras.screen.utils.overlay.containers.PlotInfoOverlay;
+import dev.fire.dfextras.screen.utils.overlay.containers.SupportInfoOverlay;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,7 @@ public class OverlayConfig {
     public CharSetOption FileCharSet = DefaultOverlayConfig.FileCharSet;
 
     public PlotInfoOverlay plotInfoOverlay = DefaultOverlayConfig.plotInfoOverlay;
+    public SupportInfoOverlay supportInfoOverlay = DefaultOverlayConfig.supportInfoOverlay;
 
     public static OverlayConfig getConfig() {
         if (instance == null) {
@@ -23,7 +25,8 @@ public class OverlayConfig {
                 //Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 JsonObject object = new JsonParser().parse(FileManager.readConfig(FileManager.getOverlayConfigFile())).getAsJsonObject();
 
-                instance.plotInfoOverlay = PlotInfoOverlay.getFromJson(object, "PlayerListTextListObject");
+                instance.plotInfoOverlay = PlotInfoOverlay.getFromJson(object, "plotInfoOverlay");
+                instance.supportInfoOverlay = SupportInfoOverlay.getFromJson(object, "supportInfoOverlay");
 
 
             } catch (Exception exception) {
@@ -44,7 +47,8 @@ public class OverlayConfig {
         try {
             JsonObject object = new JsonObject();
 
-            Mod.OVERLAY_MANAGER.plotInfoOverlay.toJson(object, "PlayerListTextListObject");
+            Mod.OVERLAY_MANAGER.plotInfoOverlay.toJson(object, "plotInfoOverlay");
+            Mod.OVERLAY_MANAGER.supportInfoOverlay.toJson(object, "supportInfoOverlay");
 
 
             FileManager.writeConfig(FileManager.getOverlayConfigFile(), object.toString());

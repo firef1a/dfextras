@@ -13,8 +13,10 @@ import dev.fire.dfextras.server.LocationType;
 import dev.fire.dfextras.server.ServerManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,9 @@ public class PlotInfoOverlay extends TextList {
             if (inRange(numPlayers, 3, 4)) numColor = 0xe8bd3c;
             if (inRange(numPlayers, 5, 7)) numColor = 0xf0e856;
             if (inRange(numPlayers, 8, 16)) numColor = 0x71d941;
-            if (numPlayers > 16) numColor = 0x41bfd9;
+            if (inRange(numPlayers, 17, 25)) numColor = 0x41bfd9;
+            if (inRange(numPlayers, 26, 50)) numColor = 0x8c55e6;
+            if (numPlayers > 50) numColor = 0xe655da;
 
             textList.add(Text.literal(""));
             textList.add(monoText("Players: ", ColorUtils.GRAY).append(monoText("" + numPlayers, numColor)));

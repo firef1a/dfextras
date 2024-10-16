@@ -7,6 +7,7 @@ import dev.fire.dfextras.devutils.ColorUtils;
 import dev.fire.dfextras.screen.screens.OverlayScreen;
 import dev.fire.dfextras.screen.utils.RenderObject;
 import dev.fire.dfextras.screen.utils.overlay.containers.PlotInfoOverlay;
+import dev.fire.dfextras.screen.utils.overlay.containers.SupportInfoOverlay;
 import dev.fire.dfextras.server.ServerManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -24,12 +25,16 @@ public class OverlayManager {
     private ArrayList<RenderObject> renderObjectList;
 
     public PlotInfoOverlay plotInfoOverlay;
+    public SupportInfoOverlay supportInfoOverlay;
 
     public OverlayManager() {
         renderObjectList = new ArrayList<>();
 
         plotInfoOverlay = OverlayConfig.getConfig().plotInfoOverlay;
         renderObjectList.add(plotInfoOverlay);
+
+        supportInfoOverlay = OverlayConfig.getConfig().supportInfoOverlay;
+        renderObjectList.add(supportInfoOverlay);
     }
 
     public void onRender(DrawContext context, float tickDelta, TextRenderer textRenderer, CallbackInfo ci) {
