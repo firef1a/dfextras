@@ -2,58 +2,46 @@ package dev.fire.dfextras.server;
 
 import com.mojang.authlib.GameProfile;
 import dev.fire.dfextras.Mod;
-import dev.fire.dfextras.chat.ChatManager;
+import dev.fire.dfextras.chat.ChatUtils;
 import dev.fire.dfextras.devutils.PositionUtils;
 import dev.fire.dfextras.devutils.VectorUtils;
-import net.minecraft.block.Block;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
 
 public class PlotManager {
-    private int outstandingRequests;
+    private int outstandingLocateRequests;
+    private int outstandingSupportQueueRequests;
     public PlotInfo plotInfo;
 
     public BlockPos lastSpawn;
     public Vec3d lastPosition;
 
     public ArrayList<Text> playerList;
-
-    public static HashMap<String, BlockPos> worldSpawnLocations = new HashMap<>(
-            Map.ofEntries(
-                    Map.entry("node1", new BlockPos(0, 60, 0)),
-                    Map.entry("node2", new BlockPos(0, 60, 0)),
-                    Map.entry("node3", new BlockPos(0, 60, 0)),
-                    Map.entry("node4", new BlockPos(0, 60, 0)),
-                    Map.entry("node5", new BlockPos(0, 60, 0)),
-                    Map.entry("node6", new BlockPos(0, 60, 0)),
-                    Map.entry("node7", new BlockPos(0, 60, 0)),
-                    Map.entry("dev", new BlockPos(0, 60, 0)),
-                    Map.entry("build", new BlockPos(0, 60, 0)),
-                    Map.entry("dev-events", new BlockPos(0, 60, 0)),
-                    Map.entry("edu", new BlockPos(0, 60, 0)),
-                    Map.entry("dev2", new BlockPos(0, 60, 0)),
-                    Map.entry("dev3", new BlockPos(0, 60, 0))
-                    )
-    );
+    public ArrayList<SupportEntry> supportEntryList;
 
     public PlotManager() {
         plotInfo = new PlotInfo(LocationType.NONE);
-        outstandingRequests = 0;
+        outstandingLocateRequests = 0;
         playerList = new ArrayList<>();
+        supportEntryList = new ArrayList<>();
     }
 
     public void requestPlotInfo() {
-        outstandingRequests++;
-        ChatManager.sendCommandAsPlayer("locate");
+        outstandingLocateRequests++;
+        ChatUtils.sendCommandAsPlayer("locate");
+    }
+
+    public void requestSupportQueue() {
+        outstandingSupportQueueRequests++;
+        ChatUtils.sendCommandAsPlayer("support queue");
     }
 
     public boolean onChatMessage(Text message) {
@@ -96,9 +84,9 @@ public class PlotManager {
                         plotInfo = new PlotInfo(plotName, owner, plotId, node, LocationType.PLOT);
                     }
                 }
-                if (outstandingRequests > 0) {
+                if (outstandingLocateRequests > 0) {
                     cancelMessage = true;
-                    outstandingRequests--;
+                    outstandingLocateRequests--;
                 }
             }
 
@@ -146,8 +134,9 @@ public class PlotManager {
         //ChatManager.displayChatMessageToPlayer(Text.literal(currentWorldSpawn.toString()));
         if (!PositionUtils.isequal(currentWorldSpawn, lastSpawn) && !PositionUtils.isequal(currentWorldSpawn, new BlockPos(0,0,0))) {
             lastPosition = null;
-            outstandingRequests = 0;
+            outstandingLocateRequests = 0;
             requestPlotInfo();
+            requestSupportQueue();
         } else if (!VectorUtils.withinHorizontalRangeInclusive(playerPosition, lastPosition, 1414.21356237) && lastPosition != null && playerPosition != null) {
             requestPlotInfo();
         }

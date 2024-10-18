@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import static dev.fire.dfextras.Mod.MOD_NAME;
 
-public class ChatManager {
+public class ChatUtils {
     public static void sendMessageAsPlayer(String content) {
         if (content.charAt(0) == '/') {
             Objects.requireNonNull(Mod.MC.getNetworkHandler()).sendChatCommand(content.substring(1));
