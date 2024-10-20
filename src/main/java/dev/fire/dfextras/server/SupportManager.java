@@ -1,5 +1,7 @@
 package dev.fire.dfextras.server;
 
+import dev.fire.dfextras.devutils.OSValidator;
+import dev.fire.dfextras.external.SystemIOManager;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 
@@ -25,14 +27,10 @@ public class SupportManager {
                 String player = getContent(siblings.get(1));
                 String reason = getContent(siblings.get(4));
 
-                /*
+
                 if (OSValidator.isUnix()) {
                     SystemIOManager.sendDesktopNotification(player + " requested a support session", reason, 1000*5, "critical");
                 }
-
-                Firemod.MOBILE_NOTIFICATION_MANAGER.sendMobileNotification(player + " entered the queue.", reason);
-
-                 */
 
                 return_message = Text.empty()
                         .append(message)

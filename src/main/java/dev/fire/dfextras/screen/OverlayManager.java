@@ -38,6 +38,10 @@ public class OverlayManager {
     }
 
     public void onRender(DrawContext context, float tickDelta, TextRenderer textRenderer, CallbackInfo ci) {
+        if (!Config.getConfig().CanSeeHeaderAndFootersTabList) {
+            Mod.MC.inGameHud.getPlayerListHud().setFooter(Text.literal("Headers/Footers are currently disabled").withColor(ColorUtils.DARK_GRAY).styled(style -> style.withItalic(true)));
+            Mod.MC.inGameHud.getPlayerListHud().setHeader(Text.empty());
+        }
         if (ServerManager.isPlayingDiamondfire()) {
             for (RenderObject object : renderObjectList) {
                 object.update();

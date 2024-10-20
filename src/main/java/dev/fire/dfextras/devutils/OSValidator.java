@@ -1,36 +1,32 @@
 package dev.fire.dfextras.devutils;
 
+import dev.fire.dfextras.external.OperatingSystem;
+
 public class OSValidator {
     private static final String OS = System.getProperty("os.name").toLowerCase();
-
     public static boolean isWindows() {
         return OS.contains("win");
     }
-
     public static boolean isMac() {
         return OS.contains("mac");
     }
-
     public static boolean isUnix() {
         return (OS.contains("nix") || OS.contains("nux") || OS.contains("aix"));
     }
-
     public static boolean isSolaris() {
         return OS.contains("sunos");
     }
-
-    public static String getOS(){
+    public static OperatingSystem getOS() {
         if (isWindows()) {
-            return "win";
+            return OperatingSystem.WINDOWS;
         } else if (isMac()) {
-            return "osx";
+            return OperatingSystem.MAC;
         } else if (isUnix()) {
-            return "uni";
+            return OperatingSystem.UNIX;
         } else if (isSolaris()) {
-            return "sol";
+            return OperatingSystem.SOLARIS;
         } else {
-            return "err";
+            return OperatingSystem.OTHER;
         }
     }
-
 }

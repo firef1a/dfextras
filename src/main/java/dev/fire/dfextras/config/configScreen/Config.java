@@ -16,13 +16,10 @@ public class Config {
     public CharSetOption SaveCharSet = DefaultConfig.SaveCharSet;
     public CharSetOption FileCharSet = DefaultConfig.FileCharSet;
 
-    public boolean PlotHeaderFooterToggle = DefaultConfig.PlotHeaderFooterToggle;
+    public boolean ClickSupportSessionToAccept = DefaultConfig.ClickSupportSessionToAccept;
+    public boolean SendDesktopNotificationsOnSupportRequest = DefaultConfig.SendDesktopNotificationsOnSupportRequest;
+    public boolean CanSeeHeaderAndFootersTabList = DefaultConfig.CanSeeHeaderAndFootersTabList;
 
-    public boolean PlayerListToggleOnSite03 = DefaultConfig.PlayerListToggleOnSite03;
-    public boolean PlayerListReportValues = DefaultConfig.PlayerListReportValues;
-    public String PlayerListBaseURL = DefaultConfig.PlayerListBaseURL;
-    public String PlayerListUpdatePath = DefaultConfig.PlayerListUpdatePath;
-    public String PlayerListFetchPath = DefaultConfig.PlayerListFetchPath;
 
     public static Config getConfig() {
         if (instance == null) {
@@ -32,14 +29,11 @@ public class Config {
                 //Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 JsonObject object = new JsonParser().parse(FileManager.readConfig(FileManager.getConfigFile())).getAsJsonObject();
 
-                instance.PlotHeaderFooterToggle = object.get("PlotHeaderFooterToggle").getAsBoolean();
+                instance.ClickSupportSessionToAccept = object.get("ClickSupportSessionToAccept").getAsBoolean();
+                instance.SendDesktopNotificationsOnSupportRequest = object.get("SendDesktopNotificationsOnSupportRequest").getAsBoolean();
 
-                instance.PlayerListToggleOnSite03 = object.get("PlayerListToggleOnSite03").getAsBoolean();
-                instance.PlayerListReportValues = object.get("PlayerListReportValues").getAsBoolean();
+                instance.CanSeeHeaderAndFootersTabList = object.get("CanSeeHeaderAndFootersTabList").getAsBoolean();
 
-                instance.PlayerListBaseURL = object.get("PlayerListBaseURL").getAsString();
-                instance.PlayerListUpdatePath = object.get("PlayerListUpdatePath").getAsString();
-                instance.PlayerListFetchPath = object.get("PlayerListFetchPath").getAsString();
 
             } catch (Exception exception) {
                 Mod.LOGGER.info("Config didn't load: " + exception);
@@ -59,14 +53,11 @@ public class Config {
         try {
             JsonObject object = new JsonObject();
 
-            object.addProperty("PlotHeaderFooterToggle", Config.getConfig().PlotHeaderFooterToggle);
+            object.addProperty("ClickSupportSessionToAccept", Config.getConfig().ClickSupportSessionToAccept);
+            object.addProperty("SendDesktopNotificationsOnSupportRequest", Config.getConfig().SendDesktopNotificationsOnSupportRequest);
 
-            object.addProperty("PlayerListToggleOnSite03", Config.getConfig().PlayerListToggleOnSite03);
-            object.addProperty("PlayerListReportValues", Config.getConfig().PlayerListReportValues);
+            object.addProperty("CanSeeHeaderAndFootersTabList", Config.getConfig().CanSeeHeaderAndFootersTabList);
 
-            object.addProperty("PlayerListBaseURL", Config.getConfig().PlayerListBaseURL);
-            object.addProperty("PlayerListUpdatePath", Config.getConfig().PlayerListUpdatePath);
-            object.addProperty("PlayerListFetchPath", Config.getConfig().PlayerListFetchPath);
 
             FileManager.writeConfig(FileManager.getConfigFile(), object.toString());
         } catch (Exception e) {
@@ -78,119 +69,78 @@ public class Config {
         YetAnotherConfigLib.Builder yacl =
                 YetAnotherConfigLib.createBuilder()
                         .title(Text.literal("Used for narration. Could be used to render a title in the future."))
-                            .category(displayCategory().build())
-                            .category(miscCategory().build());
+                        .category(supportCategory().build())
+                        .category(miscCategory().build());
 
         return yacl.save(this::save).build();
     }
 
 
-    private ConfigCategory.Builder displayCategory() {
+    private ConfigCategory.Builder supportCategory() {
         ConfigCategory.Builder configBuilder = ConfigCategory.createBuilder()
-                .name(Text.literal("HUD Displays"))
-                .tooltip(Text.literal("Customize your Site-03 HUD!"));
+                .name(Text.literal("Support"))
+                .tooltip(Text.literal("Custom features for support members."));
 
         OptionGroup playerList = OptionGroup.createBuilder()
-                .name(Text.literal("Player List"))
-                .description(OptionDescription.of(Text.literal("Shows a list on your HUD of current player on Site-03, requires at least one player with the mod to be playing Site-03.")))
+                .name(Text.literal("Utility Features"))
+                .description(OptionDescription.of(Text.literal("")))
                 .option(Option.createBuilder(boolean.class)
-                        .name(Text.literal("Panel Enabled while on Site-03"))
+                        .name(Text.literal("Click support session to accept"))
                         .description(OptionDescription.createBuilder()
-                                .text(Text.literal("Toggles the player list panel is shown while playing Site-03. Why you would want this? I don't really know other than so you don't piss off a Site-03 dev by sharing a screenshot with this mod."))
+                                .text(Text.literal("Toggles whether you can click on support session to accept them. Indicated by [ SUPPORT ] at the end of the message."))
                                 .build())
                         .binding(
-                                DefaultConfig.PlayerListToggleOnSite03,
-                                () -> PlayerListToggleOnSite03,
-                                opt -> PlayerListToggleOnSite03 = opt
+                                DefaultConfig.ClickSupportSessionToAccept,
+                                () -> ClickSupportSessionToAccept,
+                                opt -> ClickSupportSessionToAccept = opt
+                        )
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                .option(Option.createBuilder(boolean.class)
+                        .name(Text.literal("Send Desktop Notifications"))
+                        .description(OptionDescription.createBuilder()
+                                .text(Text.literal("Sends a desktop notification when someone requests a support session. Currently only works on Linux."))
+                                .build())
+                        .binding(
+                                DefaultConfig.SendDesktopNotificationsOnSupportRequest,
+                                () -> SendDesktopNotificationsOnSupportRequest,
+                                opt -> SendDesktopNotificationsOnSupportRequest = opt
                         )
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                 .build();
+
 
         configBuilder.group(playerList);
 
-        OptionGroup site03API = OptionGroup.createBuilder()
-                .name(Text.literal("Site-03 API"))
-                .description(OptionDescription.of(Text.literal("Configs for the player list API. Replace these URLs with your own at your discretion.")))
-                .option(Option.createBuilder(boolean.class)
-                        .name(Text.literal("Enabled Value Reporting"))
-                        .description(OptionDescription.createBuilder()
-                                .text(Text.literal("Toggles whether you will report Site-03 player counts back to the below list server IP. The whole point of this mod is to report player count values so idk why you would want this other than using replay mod."))
-                                .build())
-                        .binding(
-                                DefaultConfig.PlayerListReportValues,
-                                () -> PlayerListReportValues,
-                                opt -> PlayerListReportValues = opt
-                        )
-                        .controller(TickBoxControllerBuilder::create)
-                        .build())
-                .option(Option.createBuilder(String.class)
-                        .name(Text.literal("API Base URL"))
-                        .description(OptionDescription.createBuilder()
-                                .text(Text.literal("The namespace URL that the mod request and sends data from and to."))
-                                .build())
-                        .binding(
-                                DefaultConfig.PlayerListBaseURL,
-                                () -> PlayerListBaseURL,
-                                opt -> PlayerListBaseURL = opt
-                        )
-                        .controller(StringControllerBuilder::create)
-                        .build())
-                .option(Option.createBuilder(String.class)
-                        .name(Text.literal("API Update Path"))
-                        .description(OptionDescription.createBuilder()
-                                .text(Text.literal("The path that the mod sends player data to while you are on Site-03."))
-                                .build())
-                        .binding(
-                                DefaultConfig.PlayerListUpdatePath,
-                                () -> PlayerListUpdatePath,
-                                opt -> PlayerListUpdatePath = opt
-                        )
-                        .controller(StringControllerBuilder::create)
-                        .build())
-                .option(Option.createBuilder(String.class)
-                        .name(Text.literal("API Fetch Path"))
-                        .description(OptionDescription.createBuilder()
-                                .text(Text.literal("The path that the mod requests data from while you are not on Site-03."))
-                                .build())
-                        .binding(
-                                DefaultConfig.PlayerListFetchPath,
-                                () -> PlayerListFetchPath,
-                                opt -> PlayerListFetchPath = opt
-                        )
-                        .controller(StringControllerBuilder::create)
-                        .build())
-                .build();
-
-        configBuilder.group(site03API);
 
         return configBuilder;
     }
 
     private ConfigCategory.Builder miscCategory() {
         ConfigCategory.Builder configBuilder = ConfigCategory.createBuilder()
-                .name(Text.literal("Misc Options"))
-                .tooltip(Text.literal("Silly things"));
+                .name(Text.literal("Misc. Features"))
+                .tooltip(Text.literal("Mostly just for debugging this mod."));
 
-        OptionGroup playerList = OptionGroup.createBuilder()
-                .name(Text.literal("Tab List"))
-                .description(OptionDescription.of(Text.literal("Toggles for the Tab List.")))
-
+        OptionGroup hud = OptionGroup.createBuilder()
+                .name(Text.literal("Hud Toggles"))
+                .description(OptionDescription.of(Text.literal("")))
                 .option(Option.createBuilder(boolean.class)
-                        .name(Text.literal("Enable Footers and Headers"))
+                        .name(Text.literal("Enable Tablist Header/Footers"))
                         .description(OptionDescription.createBuilder()
-                                .text(Text.literal("Toggles whether Footer and Header for the tab list are rendered."))
+                                .text(Text.literal("Toggles whether you can... header and footers in the tablist."))
                                 .build())
                         .binding(
-                                DefaultConfig.PlotHeaderFooterToggle,
-                                () -> PlotHeaderFooterToggle,
-                                opt -> PlotHeaderFooterToggle = opt
+                                DefaultConfig.CanSeeHeaderAndFootersTabList,
+                                () -> CanSeeHeaderAndFootersTabList,
+                                opt -> CanSeeHeaderAndFootersTabList = opt
                         )
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                 .build();
 
-        configBuilder.group(playerList);
+        configBuilder.group(hud);
+
 
         return configBuilder;
     }

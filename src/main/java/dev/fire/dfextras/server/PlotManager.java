@@ -3,6 +3,7 @@ package dev.fire.dfextras.server;
 import com.mojang.authlib.GameProfile;
 import dev.fire.dfextras.Mod;
 import dev.fire.dfextras.chat.ChatUtils;
+import dev.fire.dfextras.config.configScreen.Config;
 import dev.fire.dfextras.devutils.PositionUtils;
 import dev.fire.dfextras.devutils.VectorUtils;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -135,10 +136,11 @@ public class PlotManager {
         if (!PositionUtils.isequal(currentWorldSpawn, lastSpawn) && !PositionUtils.isequal(currentWorldSpawn, new BlockPos(0,0,0))) {
             lastPosition = null;
             outstandingLocateRequests = 0;
-            requestPlotInfo();
-            requestSupportQueue();
+            if (Mod.OVERLAY_MANAGER.plotInfoOverlay.isElementRendered()) requestPlotInfo();
+            if (Mod.OVERLAY_MANAGER.supportInfoOverlay.isElementRendered()) requestSupportQueue();
+
         } else if (!VectorUtils.withinHorizontalRangeInclusive(playerPosition, lastPosition, 1414.21356237) && lastPosition != null && playerPosition != null) {
-            requestPlotInfo();
+            if (Mod.OVERLAY_MANAGER.plotInfoOverlay.isElementRendered()) requestPlotInfo();
         }
 
         lastPosition = playerPosition;
