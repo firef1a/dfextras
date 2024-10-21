@@ -27,7 +27,6 @@ public class SupportManager {
                 String player = getContent(siblings.get(1));
                 String reason = getContent(siblings.get(4));
 
-
                 if (OSValidator.isUnix()) {
                     SystemIOManager.sendDesktopNotification(player + " requested a support session", reason, 1000*5, "critical");
                 }

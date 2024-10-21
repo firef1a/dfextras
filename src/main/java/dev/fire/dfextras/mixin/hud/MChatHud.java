@@ -29,7 +29,8 @@ public class MChatHud {
 
         should_cancel = Mod.PLOT_MANAGER.onChatMessage(message);
 
-        if (should_cancel) ci.cancel();
+        //if (should_cancel) ci.cancel();
+
 
     }
 

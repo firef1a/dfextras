@@ -13,6 +13,6 @@ public class SystemIOManager {
                 title,
                 body
         };
-        Process p = rt.exec(cmd);
+        rt.exec(cmd);
     }
 }

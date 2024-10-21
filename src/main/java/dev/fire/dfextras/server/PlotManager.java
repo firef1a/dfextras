@@ -28,11 +28,14 @@ public class PlotManager {
     public ArrayList<Text> playerList;
     public ArrayList<SupportEntry> supportEntryList;
 
+    public boolean sendSupportQueueNextTick = false;
+
     public PlotManager() {
         plotInfo = new PlotInfo(LocationType.NONE);
         outstandingLocateRequests = 0;
         playerList = new ArrayList<>();
         supportEntryList = new ArrayList<>();
+        sendSupportQueueNextTick = false;
     }
 
     public void requestPlotInfo() {
@@ -131,13 +134,23 @@ public class PlotManager {
             }
         }
 
+        if (sendSupportQueueNextTick) {
+            sendSupportQueueNextTick = false;
+            //requestSupportQueue();
+        }
+
         // other crap
         //ChatManager.displayChatMessageToPlayer(Text.literal(currentWorldSpawn.toString()));
-        if (!PositionUtils.isequal(currentWorldSpawn, lastSpawn) && !PositionUtils.isequal(currentWorldSpawn, new BlockPos(0,0,0))) {
-            lastPosition = null;
-            outstandingLocateRequests = 0;
-            if (Mod.OVERLAY_MANAGER.plotInfoOverlay.isElementRendered()) requestPlotInfo();
-            if (Mod.OVERLAY_MANAGER.supportInfoOverlay.isElementRendered()) requestSupportQueue();
+        if (currentWorldSpawn != null && !PositionUtils.isequal(currentWorldSpawn, lastSpawn) && !PositionUtils.isequal(currentWorldSpawn, new BlockPos(0,0,0))) {
+            if (lastSpawn == null || !VectorUtils.withinHorizontalRangeInclusive(currentWorldSpawn.toCenterPos(), lastSpawn.toCenterPos(), 300)) {
+                ChatUtils.displayChatMessageToPlayer(Text.literal("current: " + currentWorldSpawn.toString()));
+                if (lastSpawn != null) ChatUtils.displayChatMessageToPlayer(Text.literal("last: " +  lastSpawn.toString()));
+                lastPosition = null;
+                outstandingLocateRequests = 0;
+                if (Mod.OVERLAY_MANAGER.plotInfoOverlay.isElementRendered()) requestPlotInfo();
+                if (Mod.OVERLAY_MANAGER.supportInfoOverlay.isElementRendered()) sendSupportQueueNextTick = true;
+            }
+
 
         } else if (!VectorUtils.withinHorizontalRangeInclusive(playerPosition, lastPosition, 1414.21356237) && lastPosition != null && playerPosition != null) {
             if (Mod.OVERLAY_MANAGER.plotInfoOverlay.isElementRendered()) requestPlotInfo();
